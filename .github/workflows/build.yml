@@ -4,18 +4,21 @@ on:
     tags: ['v*']
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   zip:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Empaquetar resource pack
+      - name: Package resource pack
         run: |
-          NAME="AE2-Traducciones-ES-${GITHUB_REF_NAME}.zip"
+          NAME="AE2-Translations-${GITHUB_REF_NAME}.zip"
           zip -r -X "$NAME" pack.mcmeta assets pack.png 2>/dev/null || \
           zip -r -X "$NAME" pack.mcmeta assets
           echo "ASSET=$NAME" >> $GITHUB_ENV
-      - name: Subir a Release
+      - name: Upload to Release
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
